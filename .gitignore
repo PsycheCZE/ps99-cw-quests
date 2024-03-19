@@ -1,0 +1,19 @@
+# Systémové soubory
+.DS_Store
+Thumbs.db
+
+# Složka pro nastavení editoru
+.vscode/
+
+# Závislosti
+node_modules/
+
+# Produkční soubory
+/dist
+/build
+
+# Logy
+*.log
+
+# Systémové soubory
+.env
