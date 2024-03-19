@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VARMI ARMY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="container">
+  <div class="title-bar">
+    VARMI ARMY
+    <span class="close-btn" onclick="closeWindow()">X</span>
+  </div>
+  <p><strong>Clan Points:</strong> <span id="clanPoints"></span> | <strong>Clan Rank:</strong> <span id="clanRank"></span></p>
+  <p><strong>Aktualizováno:</strong> <span id="lastUpdated"></span></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Quest</th>
+        <th>Progress</th>
+        <th>Stars</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <script src="renderer.js"></script>
+</div>
+</body>
+</html>
