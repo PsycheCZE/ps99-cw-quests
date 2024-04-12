@@ -190,9 +190,18 @@ async function showPlayerDetails(contributions) {
 
   try {
     const allPlayers = await fetch('https://clan.varmi.cz/api/all/leaderboard').then(res => res.json());
-    Object.entries(contributions).forEach(([userId, contribution]) => {
-      const player = allPlayers.find(player => `u${player.robloxId}` === userId);
-      const nick = player ? player.nick : 'Neznámý hráč';
+
+    const playerContributions = allPlayers.reduce((acc, player) => {
+      const userId = `u${player.robloxId}`;
+      if (contributions[userId]) {
+        acc.push({ nick: player.nick, contribution: contributions[userId] });
+      }
+      return acc;
+    }, []);
+
+    playerContributions.sort((a, b) => b.contribution - a.contribution);
+
+    playerContributions.forEach(({ nick, contribution }) => {
       const li = document.createElement('li');
       li.innerHTML = `<span class="nickname">${nick}</span> - [Progress: ${contribution}]`;
       playerList.appendChild(li);
@@ -211,6 +220,51 @@ async function showPlayerDetails(contributions) {
   mainContent.style.display = 'none';
 }
 
+
+async function showPlayerRankDetails() {
+  const mainContent = document.getElementById('container');
+  const detailContent = document.createElement('div');
+  detailContent.id = 'playerRankDetails';
+
+  const backButton = document.createElement('button');
+  backButton.id = 'backButton';
+  backButton.textContent = 'Zpět';
+  backButton.onclick = () => {
+    detailContent.remove();
+    mainContent.style.display = 'block';
+  };
+
+  detailContent.appendChild(backButton);
+
+  const playerList = document.createElement('ul');
+
+  try {
+    const allPlayers = await fetch('https://clan.varmi.cz/api/all/leaderboard').then(res => res.json());
+
+
+    allPlayers.sort((a, b) => a.position - b.position);
+
+
+    allPlayers.forEach(player => {
+      const li = document.createElement('li');
+      li.innerHTML = `${player.position}. ${player.nick} (${player.clan}) - [${formatNumber(player.clanPoints)}]`;
+      playerList.appendChild(li);
+    });
+  } catch (error) {
+    console.error("Error loading player rank details: ", error);
+    const li = document.createElement('li');
+    li.textContent = 'Nepodařilo se načíst detaily hráčů.';
+    playerList.appendChild(li);
+  }
+
+  detailContent.appendChild(playerList);
+
+  mainContent.parentNode.insertBefore(detailContent, mainContent);
+  mainContent.style.display = 'none';
+}
+
+document.getElementById("userPosition").addEventListener('click', showPlayerRankDetails);
+document.getElementById("userPointsAll").addEventListener('click', showPlayerRankDetails);
 
 const updateUsersSelectBox  = async() => {
   console.log('updateUsersSelectBox');
